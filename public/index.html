@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Inbound Management System - Dashboard untuk manajemen kedatangan barang dan transaksi inbound">
+    <title>Inbound Management</title>
+    <link rel="stylesheet" href="style.css?v=18">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-warehouse"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Inbound</h1>
+                    <span>Management System</span>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-page="dashboard" id="nav-dashboard">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="inbound-arrival" id="nav-inbound-arrival">
+                        <i class="fas fa-truck-loading"></i>
+                        <span>Inbound Arrival</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="inbound-transaction" id="nav-inbound-transaction">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Inbound Transaction</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="vas" id="nav-vas">
+                        <i class="fas fa-tags"></i>
+                        <span>VAS</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-info">
+                <i class="fas fa-clock"></i>
+                <span id="currentTime">--:--:--</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-btn" id="menuBtn" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="breadcrumb" id="breadcrumb">
+                    <span class="breadcrumb-item"><i class="fas fa-home"></i></span>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item active" id="breadcrumbPage">Dashboard</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-date" id="currentDate">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>--</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content Area -->
+        <div class="content-area">
+
+            <!-- Dashboard Page -->
+            <section class="page active" id="page-dashboard">
+                <div class="page-header">
+                    <h2>Dashboard</h2>
+                    <p>Overview manajemen inbound warehouse</p>
+                </div>
+
+                <div class="report-section">
+                    <h3 class="section-title"><i class="fas fa-chart-bar"></i> Inbound Report</h3>
+                    <div class="stats-grid stats-grid--report">
+                        <div class="stat-card stat-card--gradient-green">
+                            <div class="stat-card__icon">
+                                <i class="fas fa-check-double"></i>
+                            </div>
+                            <div class="stat-card__info">
+                                <span class="stat-card__value" id="statPOReceived">0</span>
+                                <span class="stat-card__label">Total PO Diterima</span>
+                                <span class="stat-card__sub">Total PO di Inbound Arrival</span>
+                            </div>
+                            <div class="stat-card__bg-icon">
+                                <i class="fas fa-check-double"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card--gradient-blue">
+                            <div class="stat-card__icon">
+                                <i class="fas fa-copyright"></i>
+                            </div>
+                            <div class="stat-card__info">
+                                <span class="stat-card__value" id="statBrandReceived">0</span>
+                                <span class="stat-card__label">Total Brand Diterima</span>
+                                <span class="stat-card__sub">Brand unik yang sudah diterima</span>
+                            </div>
+                            <div class="stat-card__bg-icon">
+                                <i class="fas fa-copyright"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card--gradient-orange">
+                            <div class="stat-card__icon">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div class="stat-card__info">
+                                <span class="stat-card__value" id="statPOPending">0</span>
+                                <span class="stat-card__label">PO Open / Pending</span>
+                                <span class="stat-card__sub">PO yang belum diterima lengkap</span>
+                            </div>
+                            <div class="stat-card__bg-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card--gradient-red">
+                            <div class="stat-card__icon">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                            <div class="stat-card__info">
+                                <span class="stat-card__value" id="statQtyPending">0</span>
+                                <span class="stat-card__label">Total Qty Pending</span>
+                                <span class="stat-card__sub">Total unit yang masih ditunggu</span>
+                            </div>
+                            <div class="stat-card__bg-icon">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card--gradient-purple">
+                            <div class="stat-card__icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-card__info">
+                                <span class="stat-card__value" id="statAvgRecPut">-</span>
+                                <span class="stat-card__label">Avg Receive → Putaway</span>
+                                <span class="stat-card__sub">Rata-rata waktu per Receipt No</span>
+                            </div>
+                            <div class="stat-card__bg-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card--gradient-orange">
+                            <div class="stat-card__icon">
+                                <i class="fas fa-shipping-fast"></i>
+                            </div>
+                            <div class="stat-card__info">
+                                <span class="stat-card__value" id="statAvgLeadTime">-</span>
+                                <span class="stat-card__label">Avg Lead Time</span>
+                                <span class="stat-card__sub">Kedatangan → Putaway per PO</span>
+                            </div>
+                            <div class="stat-card__bg-icon">
+                                <i class="fas fa-shipping-fast"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card--gradient-blue">
+                            <div class="stat-card__icon">
+                                <i class="fas fa-user-cog"></i>
+                            </div>
+                            <div class="stat-card__info">
+                                <span class="stat-card__value" id="statVasAvgPerOp">-</span>
+                                <span class="stat-card__label">Avg Qty VAS / Operator / Hari</span>
+                                <span class="stat-card__sub">Rata-rata qty per operator per hari</span>
+                            </div>
+                            <div class="stat-card__bg-icon">
+                                <i class="fas fa-user-cog"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-card--gradient-green">
+                            <div class="stat-card__icon">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div class="stat-card__info">
+                                <span class="stat-card__value" id="statVasAvgQtyDay">-</span>
+                                <span class="stat-card__label">Avg Qty VAS / Hari</span>
+                                <span class="stat-card__sub">Rata-rata qty VAS per hari</span>
+                            </div>
+                            <div class="stat-card__bg-icon">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="chart-card">
+                        <div class="chart-card__header">
+                            <h3><i class="fas fa-chart-pie"></i> Status Penerimaan</h3>
+                        </div>
+                        <div class="chart-card__body">
+                            <div class="donut-wrapper">
+                                <div class="donut-chart" id="donutChart">
+                                    <div class="donut-center">
+                                        <span class="donut-percent" id="donutPercent">0%</span>
+                                        <span class="donut-label">Completed</span>
+                                    </div>
+                                </div>
+                                <div class="donut-legend">
+                                    <div class="legend-item">
+                                        <span class="legend-dot legend-dot--green"></span>
+                                        <span class="legend-text">Completed</span>
+                                        <strong class="legend-value" id="legendCompleted">0</strong>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-dot legend-dot--red"></span>
+                                        <span class="legend-text">Pending</span>
+                                        <strong class="legend-value" id="legendPending">0</strong>
+                                    </div>
+                                    <div class="legend-item legend-item--total">
+                                        <span class="legend-dot legend-dot--blue"></span>
+                                        <span class="legend-text">Total PO Qty</span>
+                                        <strong class="legend-value" id="legendTotal">0</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-card__header">
+                            <h3><i class="fas fa-chart-bar"></i> Breakdown Qty</h3>
+                        </div>
+                        <div class="chart-card__body">
+                            <div class="bar-chart" id="barChart">
+                                <div class="bar-row">
+                                    <div class="bar-label">
+                                        <i class="fas fa-arrow-down" style="color: #34d399"></i>
+                                        <span>Receive Qty</span>
+                                    </div>
+                                    <div class="bar-track">
+                                        <div class="bar-fill bar-fill--green" id="barReceive" style="width: 0%"></div>
+                                    </div>
+                                    <span class="bar-value" id="barReceiveVal">0</span>
+                                </div>
+                                <div class="bar-row">
+                                    <div class="bar-label">
+                                        <i class="fas fa-pallet" style="color: #a78bfa"></i>
+                                        <span>Putaway Qty</span>
+                                    </div>
+                                    <div class="bar-track">
+                                        <div class="bar-fill bar-fill--purple" id="barPutaway" style="width: 0%"></div>
+                                    </div>
+                                    <span class="bar-value" id="barPutawayVal">0</span>
+                                </div>
+                                <div class="bar-row">
+                                    <div class="bar-label">
+                                        <i class="fas fa-clock" style="color: #fb923c"></i>
+                                        <span>Pending Qty</span>
+                                    </div>
+                                    <div class="bar-track">
+                                        <div class="bar-fill bar-fill--orange" id="barPending" style="width: 0%"></div>
+                                    </div>
+                                    <span class="bar-value" id="barPendingVal">0</span>
+                                </div>
+                            </div>
+                            <div class="bar-summary" id="barSummary">
+                                <div class="bar-summary__item">
+                                    <span class="bar-summary__label">Receive Rate</span>
+                                    <span class="bar-summary__value bar-summary__value--green"
+                                        id="receiveRate">0%</span>
+                                </div>
+                                <div class="bar-summary__item">
+                                    <span class="bar-summary__label">Putaway Rate</span>
+                                    <span class="bar-summary__value bar-summary__value--purple"
+                                        id="putawayRate">0%</span>
+                                </div>
+                                <div class="bar-summary__item">
+                                    <span class="bar-summary__label">Pending Rate</span>
+                                    <span class="bar-summary__value bar-summary__value--orange"
+                                        id="pendingRate">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending PO Table -->
+                <div class="dashboard-section">
+                    <div class="chart-card">
+                        <div class="chart-card__header">
+                            <h3><i class="fas fa-exclamation-triangle" style="color: #fb923c"></i> PO Pending</h3>
+                        </div>
+                        <div class="chart-card__body">
+                            <div class="table-container" style="border: none;">
+                                <table class="data-table" id="pendingTable">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tanggal Kedatangan</th>
+                                            <th>Brand</th>
+                                            <th>Receipt No</th>
+                                            <th>PO No</th>
+                                            <th>Pending Qty</th>
+                                            <th>Note</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pendingTableBody">
+                                    </tbody>
+                                </table>
+                                <div class="table-empty" id="pendingEmpty">
+                                    <i class="fas fa-check-circle" style="color: #34d399"></i>
+                                    <p>Tidak ada PO pending. Semua PO sudah diterima.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VAS Report -->
+                <div class="dashboard-section">
+                    <div class="chart-card">
+                        <div class="chart-card__header">
+                            <h3><i class="fas fa-tags" style="color: #fb923c"></i> Detail VAS per Tipe</h3>
+                        </div>
+                        <div class="chart-card__body">
+                            <div class="donut-legend" id="vasTypeList" style="width: 100%;">
+                                <!-- Dynamic legend items rendered by JS -->
+                            </div>
+                            <div class="table-empty" id="vasSummaryEmpty">
+                                <i class="fas fa-inbox"></i>
+                                <p>Belum ada data VAS.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-cards">
+                    <div class="menu-card" data-navigate="inbound-arrival" id="card-inbound-arrival">
+                        <div class="menu-card__header">
+                            <div class="menu-card__icon menu-card__icon--green">
+                                <i class="fas fa-truck-loading"></i>
+                            </div>
+                            <span class="menu-card__badge">Folder</span>
+                        </div>
+                        <div class="menu-card__body">
+                            <h3>Inbound Arrival</h3>
+                            <p>Data kedatangan barang inbound, tracking status pengiriman dan penerimaan barang di
+                                warehouse.</p>
+                        </div>
+                        <div class="menu-card__footer">
+                            <span class="menu-card__action">
+                                Buka Menu <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="menu-card" data-navigate="inbound-transaction" id="card-inbound-transaction">
+                        <div class="menu-card__header">
+                            <div class="menu-card__icon menu-card__icon--purple">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <span class="menu-card__badge">Folder</span>
+                        </div>
+                        <div class="menu-card__body">
+                            <h3>Inbound Transaction</h3>
+                            <p>Data transaksi inbound, pencatatan proses masuk barang dan verifikasi dokumen.</p>
+                        </div>
+                        <div class="menu-card__footer">
+                            <span class="menu-card__action">
+                                Buka Menu <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="menu-card" data-navigate="vas" id="card-vas">
+                        <div class="menu-card__header">
+                            <div class="menu-card__icon menu-card__icon--orange">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <span class="menu-card__badge">Folder</span>
+                        </div>
+                        <div class="menu-card__body">
+                            <h3>VAS</h3>
+                            <p>Value Added Services — pencatatan aktivitas VAS pada barang inbound.</p>
+                        </div>
+                        <div class="menu-card__footer">
+                            <span class="menu-card__action">
+                                Buka Menu <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inbound Arrival Page -->
+            <section class="page" id="page-inbound-arrival">
+                <div class="page-header">
+                    <div class="page-header__top">
+                        <button class="back-btn" data-navigate="dashboard" id="btn-back-arrival">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>Kembali</span>
+                        </button>
+                    </div>
+                    <h2><i class="fas fa-truck-loading"></i> Inbound Arrival</h2>
+                    <p>Data kedatangan barang inbound — tracking penerimaan di warehouse</p>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="table-toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn--primary" id="btnAddArrival">
+                            <i class="fas fa-plus"></i>
+                            <span>Tambah Data</span>
+                        </button>
+                        <button class="btn btn--export" id="btnExportArrival">
+                            <i class="fas fa-file-export"></i>
+                            <span>Export</span>
+                        </button>
+                        <button class="btn btn--import" id="btnImportArrival">
+                            <i class="fas fa-file-import"></i>
+                            <span>Import</span>
+                        </button>
+                        <button class="btn btn--danger bulk-btn" id="btnBulkDeleteArrival" style="display:none">
+                            <i class="fas fa-trash"></i>
+                            <span>Hapus Terpilih</span>
+                        </button>
+                        <button class="btn btn--export bulk-btn" id="btnBulkExportArrival" style="display:none">
+                            <i class="fas fa-file-export"></i>
+                            <span>Export Terpilih</span>
+                        </button>
+                    </div>
+                    <div class="toolbar-right">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Cari receipt, PO, brand..." id="searchArrival">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table class="data-table" id="arrivalTable">
+                        <thead>
+                            <tr>
+                                <th class="th-checkbox"><input type="checkbox" id="selectAllArrival"
+                                        title="Pilih semua"></th>
+                                <th>No</th>
+                                <th>Tanggal Kedatangan</th>
+                                <th>Waktu Kedatangan</th>
+                                <th>Brand</th>
+                                <th>Receipt No</th>
+                                <th>PO No</th>
+                                <th>PO Qty</th>
+                                <th>Receive Qty</th>
+                                <th>Putaway Qty</th>
+                                <th>Pending Qty</th>
+                                <th>Operator</th>
+                                <th>Note</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="arrivalTableBody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                    <div class="table-empty" id="arrivalEmpty">
+                        <i class="fas fa-inbox"></i>
+                        <p>Belum ada data. Klik <strong>Tambah Data</strong> untuk menambahkan.</p>
+                    </div>
+                    <div class="pagination" id="paginationArrival">
+                        <div class="pagination__info" id="paginationArrivalInfo">Menampilkan 0 dari 0 data</div>
+                        <div class="pagination__controls">
+                            <div class="pagination__pages" id="paginationArrivalPages"></div>
+                            <div class="pagination__per-page">
+                                <label>Per halaman:</label>
+                                <select id="perPageArrival">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50" selected>50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inbound Transaction Page -->
+            <section class="page" id="page-inbound-transaction">
+                <div class="page-header">
+                    <div class="page-header__top">
+                        <button class="back-btn" data-navigate="dashboard" id="btn-back-transaction">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>Kembali</span>
+                        </button>
+                    </div>
+                    <h2><i class="fas fa-exchange-alt"></i> Inbound Transaction</h2>
+                    <p>Data transaksi inbound — pencatatan dan verifikasi dokumen masuk</p>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="table-toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn--primary" id="btnAddTransaction">
+                            <i class="fas fa-plus"></i>
+                            <span>Tambah Data</span>
+                        </button>
+                        <button class="btn btn--export" id="btnExportTransaction">
+                            <i class="fas fa-file-export"></i>
+                            <span>Export</span>
+                        </button>
+                        <button class="btn btn--import" id="btnImportTransaction">
+                            <i class="fas fa-file-import"></i>
+                            <span>Import</span>
+                        </button>
+                        <button class="btn btn--danger bulk-btn" id="btnBulkDeleteTransaction" style="display:none">
+                            <i class="fas fa-trash"></i>
+                            <span>Hapus Terpilih</span>
+                        </button>
+                        <button class="btn btn--export bulk-btn" id="btnBulkExportTransaction" style="display:none">
+                            <i class="fas fa-file-export"></i>
+                            <span>Export Terpilih</span>
+                        </button>
+                    </div>
+                    <div class="toolbar-right">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Cari receipt, SKU, operator..." id="searchTransaction">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table class="data-table" id="transactionTable">
+                        <thead>
+                            <tr>
+                                <th class="th-checkbox"><input type="checkbox" id="selectAllTransaction"
+                                        title="Pilih semua"></th>
+                                <th>No</th>
+                                <th>Tanggal Transaksi</th>
+                                <th>Time Transaction</th>
+                                <th>Receipt No</th>
+                                <th>SKU</th>
+                                <th>Operate Type</th>
+                                <th>Qty</th>
+                                <th>Operator</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionTableBody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                    <div class="table-empty" id="transactionEmpty">
+                        <i class="fas fa-inbox"></i>
+                        <p>Belum ada data. Klik <strong>Tambah Data</strong> untuk menambahkan.</p>
+                    </div>
+                    <div class="pagination" id="paginationTransaction">
+                        <div class="pagination__info" id="paginationTransactionInfo">Menampilkan 0 dari 0 data</div>
+                        <div class="pagination__controls">
+                            <div class="pagination__pages" id="paginationTransactionPages"></div>
+                            <div class="pagination__per-page">
+                                <label>Per halaman:</label>
+                                <select id="perPageTransaction">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50" selected>50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VAS Page -->
+            <section class="page" id="page-vas">
+                <div class="page-header">
+                    <div class="page-header__top">
+                        <button class="back-btn" data-navigate="dashboard" id="btn-back-vas">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>Kembali</span>
+                        </button>
+                    </div>
+                    <h2><i class="fas fa-tags"></i> VAS</h2>
+                    <p>Value Added Services — pencatatan aktivitas VAS pada barang inbound</p>
+                </div>
+
+                <!-- VAS Task Panel -->
+                <div class="vas-task-panel" id="vasTaskPanel">
+                    <div class="vas-task-panel-header">
+                        <button class="btn btn--start-vas" id="btnStartVas">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Start VAS Task</span>
+                        </button>
+                        <p class="vas-task-hint" id="vasTaskHint">Klik untuk mulai task VAS baru — bisa jalankan
+                            beberapa task sekaligus</p>
+                    </div>
+                    <div class="vas-tasks-container" id="vasTasksContainer">
+                        <!-- Dynamic task cards rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="table-toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn--primary" id="btnAddVas">
+                            <i class="fas fa-plus"></i>
+                            <span>Tambah Manual</span>
+                        </button>
+                        <button class="btn btn--export" id="btnExportVas">
+                            <i class="fas fa-file-export"></i>
+                            <span>Export</span>
+                        </button>
+                        <button class="btn btn--import" id="btnImportVas">
+                            <i class="fas fa-file-import"></i>
+                            <span>Import</span>
+                        </button>
+                        <button class="btn btn--danger bulk-btn" id="btnBulkDeleteVas" style="display:none">
+                            <i class="fas fa-trash"></i>
+                            <span>Hapus Terpilih</span>
+                        </button>
+                        <button class="btn btn--export bulk-btn" id="btnBulkExportVas" style="display:none">
+                            <i class="fas fa-file-export"></i>
+                            <span>Export Terpilih</span>
+                        </button>
+                    </div>
+                    <div class="toolbar-right">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Cari SKU, tipe VAS, operator..." id="searchVas">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table class="data-table" id="vasTable">
+                        <thead>
+                            <tr>
+                                <th class="th-checkbox"><input type="checkbox" id="selectAllVas" title="Pilih semua">
+                                </th>
+                                <th>No</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Duration</th>
+                                <th>Brand</th>
+                                <th>SKU</th>
+                                <th>Tipe VAS</th>
+                                <th>Qty</th>
+                                <th>Operator</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vasTableBody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                    <div class="table-empty" id="vasEmpty">
+                        <i class="fas fa-inbox"></i>
+                        <p>Belum ada data. Klik <strong>Tambah Data</strong> untuk menambahkan.</p>
+                    </div>
+                    <div class="pagination" id="paginationVas">
+                        <div class="pagination__info" id="paginationVasInfo">Menampilkan 0 dari 0 data</div>
+                        <div class="pagination__controls">
+                            <div class="pagination__pages" id="paginationVasPages"></div>
+                            <div class="pagination__per-page">
+                                <label>Per halaman:</label>
+                                <select id="perPageVas">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50" selected>50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Modal: Add Arrival -->
+            <div class="modal-overlay" id="modalArrival">
+                <div class="modal">
+                    <div class="modal__header">
+                        <h3 id="modalArrivalTitle"><i class="fas fa-truck-loading"></i> Tambah Inbound Arrival</h3>
+                        <button class="modal__close" id="closeModalArrival">&times;</button>
+                    </div>
+                    <form id="formArrival" class="modal__form">
+                        <input type="hidden" id="arrivalEditId">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="arrivalDate">Tanggal Kedatangan</label>
+                                <input type="date" id="arrivalDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="arrivalTime">Waktu Kedatangan</label>
+                                <input type="datetime-local" id="arrivalTime" step="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="arrivalBrand">Brand</label>
+                                <input type="text" id="arrivalBrand" placeholder="Masukkan brand" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="arrivalReceiptNo">Receipt No</label>
+                                <input type="text" id="arrivalReceiptNo" placeholder="Masukkan receipt no" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="arrivalPONo">PO No</label>
+                                <input type="text" id="arrivalPONo" placeholder="Masukkan PO no" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="arrivalPOQty">PO Qty</label>
+                                <input type="number" id="arrivalPOQty" placeholder="0" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="arrivalOperator">Operator</label>
+                                <input type="text" id="arrivalOperator" placeholder="Nama operator" required>
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1">
+                                <label for="arrivalNote">Note</label>
+                                <textarea id="arrivalNote" placeholder="Catatan (opsional)" rows="2"
+                                    style="width:100%;resize:vertical;padding:8px 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-card);color:var(--text-primary);font-family:inherit;font-size:14px;"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn--ghost" id="cancelArrival">Batal</button>
+                            <button type="submit" class="btn btn--primary">
+                                <i class="fas fa-save"></i> Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal: Add Transaction -->
+            <div class="modal-overlay" id="modalTransaction">
+                <div class="modal">
+                    <div class="modal__header">
+                        <h3 id="modalTransactionTitle"><i class="fas fa-exchange-alt"></i> Tambah Inbound Transaction
+                        </h3>
+                        <button class="modal__close" id="closeModalTransaction">&times;</button>
+                    </div>
+                    <form id="formTransaction" class="modal__form">
+                        <input type="hidden" id="transactionEditId">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="transDate">Tanggal Transaksi</label>
+                                <input type="date" id="transDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="transTime">Time Transaction</label>
+                                <input type="datetime-local" id="transTime" step="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="transReceiptNo">Receipt No</label>
+                                <input type="text" id="transReceiptNo" placeholder="Masukkan receipt no" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="transSKU">SKU</label>
+                                <input type="text" id="transSKU" placeholder="Masukkan SKU" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="transOperateType">Operate Type</label>
+                                <select id="transOperateType" required>
+                                    <option value="">Pilih type...</option>
+                                    <option value="receive">Receive</option>
+                                    <option value="putaway">Putaway</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="transQty">Qty</label>
+                                <input type="number" id="transQty" placeholder="0" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="transOperator">Operator</label>
+                                <input type="text" id="transOperator" placeholder="Nama operator" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn--ghost" id="cancelTransaction">Batal</button>
+                            <button type="submit" class="btn btn--primary">
+                                <i class="fas fa-save"></i> Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal: Add VAS -->
+            <div class="modal-overlay" id="modalVas">
+                <div class="modal">
+                    <div class="modal__header">
+                        <h3 id="modalVasTitle"><i class="fas fa-tags"></i> Tambah VAS</h3>
+                        <button class="modal__close" id="closeModalVas">&times;</button>
+                    </div>
+                    <form id="formVas" class="modal__form">
+                        <input type="hidden" id="vasEditId">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="vasDate">Tanggal</label>
+                                <input type="date" id="vasDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="vasBrand">Brand</label>
+                                <input type="text" id="vasBrand" placeholder="Masukkan brand" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="vasSKU">SKU</label>
+                                <input type="text" id="vasSKU" placeholder="Masukkan SKU" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="vasType">Tipe VAS</label>
+                                <input type="text" id="vasType" placeholder="Masukkan tipe VAS" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="vasQty">Qty</label>
+                                <input type="number" id="vasQty" placeholder="0" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="vasOperator">Operator</label>
+                                <input type="text" id="vasOperator" placeholder="Nama operator" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn--ghost" id="cancelVas">Batal</button>
+                            <button type="submit" class="btn btn--primary">
+                                <i class="fas fa-save"></i> Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script src="api.js?v=1"></script>
+    <script src="script.js?v=19"></script>
+</body>
+
+</html>
